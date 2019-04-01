@@ -85,7 +85,7 @@ export default class PlayerObject extends Entity {
 		var vel = Vector.create(x, y);
 		vel = Vector.normalise(vel);
 
-        var pos = Vector.add(this.position,Vector.mult(vel,60));
+        var pos = Vector.add(this.position,Vector.mult(vel,80));
 
         vel.x *= this.muzzleVelocity;
 		vel.y *= this.muzzleVelocity;

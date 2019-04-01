@@ -2,8 +2,6 @@ import Victor from "victor";
 import Controllable from "./Controllable.js";
 import { Matter, Engine, Render, World, Bodies, Bounds,Vector,Body } from 'matter-js';
 
-
-
 export default class Entity extends Controllable {
     constructor(props) {
 
@@ -15,7 +13,8 @@ export default class Entity extends Controllable {
             color: "lightblue",
             maxLifetime: undefined,
             maxHealth: 100,
-            collidingMasks: 0x0001
+            collidingMasks: 0x0001,
+            collidable: true
         }
         //Merge properties with default values
         props = Object.assign(classType, props);
@@ -58,9 +57,10 @@ export default class Entity extends Controllable {
         Body.applyForce(this.body,this.position,Vector.create(x,y));
     }
     update(event) {
-
+        this.body.entity = this;
         //One day fix this..
         var now = Date.now();
+
         if (this.maxLifetime != undefined && this.getLifetime() >= this.maxLifetime)
             this.expire();
 
@@ -107,10 +107,23 @@ export default class Entity extends Controllable {
     }
     //onDeath lifetime
     expire() {
-        this.game.objects.remove(this);
+        this.remove();
+        this.dead = true;
         this.onDeath();
     }
+    remove() {
+        this.game.objects.remove(this);
+    }
+    isDead() {
+        return this.dead;
+    }
     onDeath() {
+
+    }
+    onCollision(col) {
+
+    }
+    onAdd() {
 
     }
 }

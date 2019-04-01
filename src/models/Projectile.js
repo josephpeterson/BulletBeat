@@ -1,4 +1,5 @@
 import Entity from "./Entity.js";
+import Emitter from "./Emitter.js";
 
 export default class Projectile extends Entity {
     constructor(props) {
@@ -7,6 +8,7 @@ export default class Projectile extends Entity {
             body: Entity.Bodies.rectangle(0, 0, 30, 10),
             class: "Projectile",
             maxLifetime: 50005,
+            directDamage: 10,
             collidingMasks: 0x010
         }
         super(Object.assign(projectileType, props));
@@ -15,6 +17,15 @@ export default class Projectile extends Entity {
         var init = Entity.Vector.create(0,0);
         var theta = Entity.Vector.angle(init,this.velocity);
         Entity.Body.setAngle(body,theta);
+
+        
+    }
+    onAdd() {
+        var trailEmitter = new Emitter({
+            position: this.position,
+        });
+        trailEmitter.attachToObject(this);
+        this.game.objects.push(trailEmitter);
     }
     render() {
         super.render();
@@ -28,5 +39,11 @@ export default class Projectile extends Entity {
 
     expire() {
         super.expire();
+    }
+    onCollision(col) {
+        this.expire();
+
+        if(col.collidingMasks == this.collidingMasks)
+            col.damage(this.directDamage);
     }
 }

@@ -15,7 +15,9 @@ export default class ObjectManager extends Array {
         super.push(entity);
 
         entity.game = this.game;
+        entity.onAdd();
 
+        if(entity.collidable)
         //Matter-js Add body to the world
         World.add(this.world, entity.body);
     }

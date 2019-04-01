@@ -1,10 +1,12 @@
 import Victor from "victor";
 
 import ObjectManager from "./ObjectManager.js";
-import CollisionManager from './CollisionManager.js';
 import PlayerObject from "../models/PlayerObject";
 import Wall from "./Wall.js";
 import { Matter, Events,Composite, Engine, Vector } from 'matter-js';
+
+import Emitter from "./Emitter.js";
+import Entity from "./Entity.js";
 
 
 export default class Game {
@@ -12,6 +14,7 @@ export default class Game {
         
         //Matter-js bind engine events
         Events.on(gameCanvas.engine, "beforeUpdate",this.update.bind(this));
+        Events.on(gameCanvas.engine, "collisionStart",(event) => this.collisionStart(event));
 
         this.running = false;
         this.gameCanvas = gameCanvas;
@@ -22,7 +25,6 @@ export default class Game {
     }
 
     test() {
-
         //You
         this.objects.push(new PlayerObject({
             game: this,
@@ -41,11 +43,20 @@ export default class Game {
             color: "red"
         }));
 
+
         //Ground
+        var width = this.gameCanvas.getCanvas().width;
+        var height = this.gameCanvas.getCanvas().height;
         this.objects.push(new Wall({
             game: this,
-            position: Vector.create(0,610),
-            width: this.gameCanvas.getCanvas().width,
+            position: Vector.create(width/2,height),
+            width: width,
+            height:50
+        }));
+        this.objects.push(new Wall({
+            game: this,
+            position: Vector.create(width/2,0),
+            width: width,
             height:50
         }));
 
@@ -129,5 +140,18 @@ export default class Game {
         requestAnimationFrame(this.tick.bind(this));
         this.render();
         this.then = now;
+    }
+
+    collisionStart(event) {
+        var pairs = event.pairs.slice();
+
+        pairs.forEach(p => {
+            let a = p.bodyA;
+            let b = p.bodyB;
+
+            a.entity.onCollision(b.entity);
+            b.entity.onCollision(a.entity);
+        })
+        
     }
 }
