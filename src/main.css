@@ -2,3 +2,21 @@ body {
     overflow: hidden;
     margin: 0px;
 }
+.legend
+{
+    background-color:#F3F3F3;
+    border:1px solid gray;
+    border-radius:4px;
+    margin:10px;
+    padding:10px;
+    width:50%;
+}
+.legend h2
+{
+    padding:3px;
+    margin:0px;
+}
+.legend p
+{
+    line-height: 200%;
+}

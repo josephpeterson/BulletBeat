@@ -8,7 +8,7 @@ export default class Entity extends Controllable {
         //Defaults
         var classType = {
             class: "Entity",
-            body: Bodies.rectangle(0, 0, 80, 80),
+            body: Bodies.rectangle(0, 0, 20, 20,{}),
             position: Vector.create(0, 0),
             color: "lightblue",
             maxLifetime: undefined,
@@ -69,7 +69,7 @@ export default class Entity extends Controllable {
         return Date.now()-this.creationDate;
     }
     setResponsive(respond) {
-        var reciever = this.game.gameCanvas.inputReciever;
+        var reciever = this.game.inputReciever;
         if (!respond) {
             if (reciever.listeners.indexOf(this) != -1) reciever.splice(reciever.indexOf(this), 1);
             return;

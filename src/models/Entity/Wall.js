@@ -6,7 +6,7 @@ export default class Wall extends Entity {
   {
     var playerType = {
       class: "WallObject",
-      color: "green",
+      color: "#A8A8A8",
       height:50,
       width:200,
     }

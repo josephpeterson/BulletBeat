@@ -1,6 +1,4 @@
-import Victor from "victor";
-import { Matter, Engine, Render, World, Bodies } from 'matter-js';
-
+import {World} from 'matter-js';
 
 export default class ObjectManager extends Array {
     constructor(game) {

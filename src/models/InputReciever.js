@@ -1,3 +1,5 @@
+import Entity from "./Entity/Entity";
+
 //Class - InputReciever (Manages all incoming and outgoing keyboard and mouse events)
 
 export const KeyboardMap = {
@@ -13,13 +15,16 @@ export const KeyboardMap = {
     KEY_SPACE: 32,
     KEY_TAB: 9,
     KEY_ESC: 27,
-    KEY_TILDE: 192
+    KEY_TILDE: 192,
+    keyCode(char) {
+        return char.toUpperCase().charCodeAt(0);
+    }
 }
 export default class InputReciever {
-    constructor(gameCanvas) {
+    constructor(game) {
         this.listeners = new Array();
-        this.gameCanvas = gameCanvas;
-        this.canvas = gameCanvas.getCanvas();
+        this.game = game;
+        this.canvas = game.gameCanvas.getCanvas();
 
         window.addEventListener("mousemove", this.mouseMove.bind(this));
         window.addEventListener("click", this.mouseClick.bind(this));
@@ -47,6 +52,17 @@ export default class InputReciever {
         this.update(event);
         this.emit("onMouseClick", event);
     }
+    getWorldPosition() {
+        var camera = this.game.renderer.camera;
+        var vec = Entity.Vector.create(this.MOUSE_X,this.MOUSE_Y);
+        
+        var trans = camera.getTranslation();
+        if(trans)
+        {
+            return Entity.Vector.sub(vec,trans);
+        }
+        return vec;
+    }
     mouseRightClick(event) {
         event.preventDefault();
         this.emit("onMouseRightClick", event);
@@ -64,8 +80,5 @@ export default class InputReciever {
         if (v != true)
             v = false;
         return v;
-    }
-    keyCode(char) {
-        return char.toUpperCase().charCodeAt(0);
     }
 }

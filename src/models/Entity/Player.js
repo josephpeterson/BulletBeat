@@ -1,10 +1,17 @@
-import Entity from "../Entity.js";
+import Entity from "./Entity.js";
 import { KeyboardMap } from "../InputReciever.js";
 import Victor from 'victor';
-import Projectile from '../Projectile.js';
+import Projectile from './Projectile.js';
 import { Vector, Body } from "matter-js";
 
-export default class PlayerObject extends Entity {
+const ControllerMapping = {
+	move_left: KeyboardMap.keyCode("A"),
+	move_right: KeyboardMap.keyCode("D"),
+	move_up: KeyboardMap.keyCode("W"),
+	move_down: KeyboardMap.keyCode("S"),
+}
+
+export default class Player extends Entity {
 	constructor(props) {
 		var playerType = {
 			shapeName: "Player 1",
@@ -22,13 +29,13 @@ export default class PlayerObject extends Entity {
 	}
 	checkControls() {
 		var speed = 2;
-		var input = this.game.gameCanvas.inputReciever;
+		var input = this.game.inputReciever;
 
 		var controls = {
-			move_left: input.getKey(KeyboardMap.KEY_LEFT),
-			move_right: input.getKey(KeyboardMap.KEY_RIGHT),
-			move_up: input.getKey(KeyboardMap.KEY_UP),
-			move_down: input.getKey(KeyboardMap.KEY_DOWN),
+			move_left: input.getKey(ControllerMapping.move_left),
+			move_right: input.getKey(ControllerMapping.move_right),
+			move_up: input.getKey(ControllerMapping.move_up),
+			move_down: input.getKey(ControllerMapping.move_down),
 		}
 		var x = 0;
 		var y = 0;
@@ -52,9 +59,10 @@ export default class PlayerObject extends Entity {
 		ctx.save();
 
 		//ShapeName
-		var x = Math.round(this.position.x);
-		var y = Math.round(this.position.y);
-		ctx.translate(x, y - 60);
+		var w = this.body.bounds.max.x-this.body.bounds.min.x;
+		var x = (this.body.bounds.min.x + w/2);
+		var y = (this.body.bounds.min.y);
+		ctx.translate(x, y-10);
 		ctx.font = "12pt Calibri";
 		ctx.textAlign = "center";
 		ctx.fillText(this.shapeName + " (" + this.health + "/" + this.maxHealth + ")", 0, -22);
@@ -75,8 +83,8 @@ export default class PlayerObject extends Entity {
 	}
 
 	onMouseClick(evt) {
-		var m = Vector.create(evt.clientX, evt.clientY);
-		this.fire(m);
+		var reciever = this.game.inputReciever;
+		this.fire(reciever.getWorldPosition(evt));
 	}
 	fire(des) {
 		var y = des.y - this.position.y;

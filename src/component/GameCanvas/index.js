@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Game from "../../models/Game.js";
 
-import InputReciever from "../../models/InputReciever.js";
 import { Matter, Engine, Render, World, Bodies} from 'matter-js';
 
 
@@ -29,9 +28,6 @@ export default class GameCanvas extends React.Component {
         element: this.refs.game,
         engine: this.engine
     });
-
-    //Bind input reciever
-    this.inputReciever = new InputReciever(this);
 
     this.createNewGame();
   }

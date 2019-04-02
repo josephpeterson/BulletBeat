@@ -1,12 +1,15 @@
 import Victor from "victor";
 
 import ObjectManager from "./ObjectManager.js";
-import PlayerObject from "../models/PlayerObject";
-import Wall from "./Wall.js";
+import Player from "./Entity/Player";
+import Wall from "./Entity/Wall.js";
 import { Matter, Events,Composite, Engine, Vector } from 'matter-js';
 
-import Emitter from "./Emitter.js";
-import Entity from "./Entity.js";
+import Emitter from "./Entity/Emitter.js";
+import Entity from "./Entity/Entity.js";
+import InputReciever from "./InputReciever.js";
+
+import Renderer from "./Renderer.js";
 
 
 export default class Game {
@@ -18,15 +21,16 @@ export default class Game {
 
         this.running = false;
         this.gameCanvas = gameCanvas;
-        this.objects = new ObjectManager(this);
-
+		this.objects = new ObjectManager(this);
+		this.renderer = new Renderer(this);
+		this.inputReciever = new InputReciever(this);
 
         this.test();
     }
 
     test() {
         //You
-        this.objects.push(new PlayerObject({
+        this.objects.push(new Player({
             game: this,
             position: new Victor(100, 100),
             velocity: new Victor(0, 0),
@@ -35,7 +39,7 @@ export default class Game {
 
 
         //Enemy test
-        this.objects.push(new PlayerObject({
+        this.objects.push(new Player({
             game: this,
             position: new Victor(600, 200),
             velocity: new Victor(0, 0),
@@ -46,25 +50,44 @@ export default class Game {
 
         //Ground
         var width = this.gameCanvas.getCanvas().width;
-        var height = this.gameCanvas.getCanvas().height;
+		var height = this.gameCanvas.getCanvas().height;
+		
+		var wallWidth = 10;
+		//Top
         this.objects.push(new Wall({
             game: this,
-            position: Vector.create(width/2,height),
+            position: Vector.create(width/2,wallWidth/2),
             width: width,
-            height:50
+            height:wallWidth
+		}));
+		//Left
+		this.objects.push(new Wall({
+            game: this,
+            position: Vector.create(-wallWidth/2,height/2),
+            width: wallWidth,
+            height:height
         }));
-        this.objects.push(new Wall({
+		//Bottom
+		this.objects.push(new Wall({
             game: this,
-            position: Vector.create(width/2,0),
+            position: Vector.create(width/2,height-wallWidth/2),
             width: width,
-            height:50
+            height:wallWidth
+		}));
+		//Right
+		this.objects.push(new Wall({
+            game: this,
+            position: Vector.create(width,height/2),
+            width: wallWidth,
+            height:height
         }));
 
         //Development
         window.game = this;
         window.sprite = this.objects[0];
 
-        window.sprite.setResponsive(true);
+		window.sprite.setResponsive(true);
+		this.renderer.lookAt(window.sprite);
     }
 
     isRunning() { return this.running; }
@@ -73,50 +96,6 @@ export default class Game {
         this.objects.all(entity => {
             entity.update(event);
         });
-    }
-    background(ctx,canvas) {
-        ctx.save();
-            ctx.fillStyle = "#C5C5C5";
-            ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.restore();
-    }
-    render() {
-        //Init variables
-        var engine = this.gameCanvas.engine;
-        var ctx = this.gameCanvas.getContext();
-        var canvas = this.gameCanvas.getCanvas();
-
-
-        canvas.width = canvas.width;
-        this.background(ctx,canvas);
-
-        
-        //Objects
-        this.objects.all(entity => {
-			entity.render();
-        });
-    }
-
-    renderBounds() {
-        var engine = this.gameCanvas.engine;
-        var ctx = this.gameCanvas.getContext();
-
-        ctx.save();
-            var bodies = Composite.allBodies(engine.world);
-            ctx.beginPath();
-            for (var i = 0; i < bodies.length; i += 1) {
-                var vertices = bodies[i].vertices;
-                ctx.moveTo(vertices[0].x, vertices[0].y);
-                for (var j = 1; j < vertices.length; j += 1) {
-                    ctx.lineTo(vertices[j].x, vertices[j].y);
-                }
-                ctx.lineTo(vertices[0].x, vertices[0].y);
-            }
-            ctx.setLineDash([12, 3, 3]);
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = 'green';
-            ctx.stroke();
-        ctx.restore();
     }
 
     start() {
@@ -138,7 +117,7 @@ export default class Game {
         var delta = now - this.then;
 
         requestAnimationFrame(this.tick.bind(this));
-        this.render();
+        this.renderer.run();
         this.then = now;
     }
 

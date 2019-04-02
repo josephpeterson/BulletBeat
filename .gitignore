@@ -75,3 +75,8 @@ typings/
 # FuseBox cache
 .fusebox/
 .DS_Store
+dist/bundle.js
+dist/bundle.js
+dist/bundle.js
+dist/bundle.js.map
+dist/bundle.js

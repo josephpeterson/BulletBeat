@@ -5,7 +5,7 @@ export default class Projectile extends Entity {
     constructor(props) {
         var projectileType = {
             shapeName: "Player 1",
-            body: Entity.Bodies.rectangle(0, 0, 30, 10),
+            body: Entity.Bodies.rectangle(0, 0, 30, 10,{frictionAir: 0,mass: 500}),
             class: "Projectile",
             maxLifetime: 50005,
             directDamage: 10,
@@ -35,6 +35,7 @@ export default class Projectile extends Entity {
     update(event) {
         super.update(event);
         //Rotate on velocity
+        Entity.Body.setInertia(this.body,500);
     }
 
     expire() {

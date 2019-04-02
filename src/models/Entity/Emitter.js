@@ -8,7 +8,7 @@ export default class Emitter extends Entity {
 			collidable: false,
 			static: true,
 
-			emitSpeed: 60,
+			emitSpeed: 25,
 			maxParticles: 20,
 			particles: [],
 			particleClass: Renderable
