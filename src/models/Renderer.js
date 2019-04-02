@@ -21,15 +21,17 @@ export class Camera
         ctx.scale(this.zoom, this.zoom);
 		ctx.translate(-canvas.width/2, -canvas.height/2);
 		
-		if(trans) //Are we following an object?
-			ctx.translate(trans.x,trans.y);
+		ctx.translate(trans.x,trans.y);
 	}
 	getTranslation() {
-		var canvas = this.renderer.canvas;
-		var pos = this.position;
-		if(pos) //Are we following an object?
-			return Entity.Vector.create(canvas.width/2 - pos.x,canvas.height/2 - pos.y);
-		return false;
+        
+        var canvas = this.renderer.canvas;
+        if(this.target) //Are we following an object?
+        {
+            var target = this.target;
+            return Entity.Vector.create(-target.position.x+100,0);
+        }
+        return Entity.Vector.create(0,0);
 	}
 }
 export default class Renderer
@@ -50,7 +52,7 @@ export default class Renderer
 		this.clear();
         this.background();
 		this.camera.apply();
-		this.render();
+        this.render();
 	}
 
 	clear() {
@@ -112,7 +114,6 @@ export default class Renderer
 	}
 	
 	lookAt(obj) {
-		var pos = obj.position;
-		this.camera.position = pos;
+        this.camera.target = obj;
 	}
 }

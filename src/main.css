@@ -1,6 +1,7 @@
 body {
     overflow: hidden;
     margin: 0px;
+    background: #3A3A3A;
 }
 .legend
 {
@@ -19,4 +20,7 @@ body {
 .legend p
 {
     line-height: 200%;
+}
+img {
+    display: none;
 }

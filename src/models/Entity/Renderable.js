@@ -7,8 +7,9 @@ export default class Renderable extends Entity {
         var classType = {
             class: "Renderable",
             position: Entity.Vector.create(0, 0),
-            body: Entity.Bodies.circle(0,0,4),
+            body: Entity.Bodies.circle(0,0,2),
             color: "orange",
+            border: 1,
             maxLifetime: 500,
             collidable: false,
             opacity: 1

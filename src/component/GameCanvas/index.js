@@ -14,7 +14,12 @@ export default class GameCanvas extends React.Component {
     super(props);
   }
   render() {
-    return <div ref="game" id="game"></div>;
+    return <div>
+        <div id="game" ref="game"></div>
+        <img id="rocket" src="./rocket.png"/>
+        <img id="fighter" src="./fighter.png"/>
+        <img id="asteroid" src="./asteroid.png"/>
+    </div>;
   }
   componentDidMount()
   {

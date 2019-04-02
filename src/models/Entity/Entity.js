@@ -1,6 +1,6 @@
 import Victor from "victor";
 import Controllable from "./Controllable.js";
-import { Matter, Engine, Render, World, Bodies, Bounds,Vector,Body } from 'matter-js';
+import { Matter, Engine, Render, World, Bodies, Bounds,Vector,Body, Svg, Vertices } from 'matter-js';
 
 export default class Entity extends Controllable {
     constructor(props) {
@@ -14,7 +14,8 @@ export default class Entity extends Controllable {
             maxLifetime: undefined,
             maxHealth: 100,
             collidingMasks: 0x0001,
-            collidable: true
+            collidable: true,
+            border: 1,
         }
         //Merge properties with default values
         props = Object.assign(classType, props);
@@ -26,8 +27,26 @@ export default class Entity extends Controllable {
         this.lifetime = 0;
         this.health = this.maxHealth;
         this.creationDate = Date.now();
+        this._eventListeners = {}
     }
 
+    triggerEvent(listener,...params)
+    {
+        var listeners = this._eventListeners[listener];
+        if(this[listener])
+            this[listener].apply(this,params);
+        if(listeners)
+        this._eventListeners[listener].forEach(trigger => {
+            trigger.apply(this,params);
+        });
+    }
+    on(listener,callback)
+    {
+        var listeners = this._eventListeners[listener];
+        if(!listeners)
+            listeners = this._eventListeners[listener] = [];
+        listeners.push(callback);
+    }
     get static() {
         return this.isStatic;
     }
@@ -93,8 +112,41 @@ export default class Entity extends Controllable {
             }
             ctx.lineTo(vertices[0].x, vertices[0].y);
             ctx.fill();
-            ctx.stroke();
+
+            if(this.border > 0)
+                ctx.stroke();
         ctx.restore();
+    }
+    renderShapeName() {
+        var ctx = this.game.gameCanvas.getContext();
+        ctx.save();
+            var w = this.body.bounds.max.x-this.body.bounds.min.x;
+            var x = (this.body.bounds.min.x + w/2);
+            var y = (this.body.bounds.min.y);
+            ctx.translate(x, y-10);
+            ctx.font = "12pt Calibri";
+            ctx.textAlign = "center";
+            ctx.fillText(this.shapeName + " (" + this.health + "/" + this.maxHealth + ")", 0, -22);
+        ctx.restore();
+    }
+    renderHealthBar() {
+        var ctx = this.game.gameCanvas.getContext();
+        ctx.save();
+            var w = this.body.bounds.max.x-this.body.bounds.min.x;
+            var x = (this.body.bounds.min.x + w/2);
+            var y = (this.body.bounds.min.y);
+            ctx.translate(x, y-10);
+            ctx.fillStyle = "black";
+            var p = {
+                x: -50,
+                y: -10,
+                w: 100,
+                h: 10
+            }
+            ctx.fillRect(p.x, p.y, p.w, p.h);
+            ctx.fillStyle = "limegreen";
+            ctx.fillRect(p.x + 1, p.y + 1, (p.w - 2) * (this.health / this.maxHealth), p.h - 2);
+        ctx.restore();        
     }
 
     damage(amt) {
@@ -109,7 +161,7 @@ export default class Entity extends Controllable {
     expire() {
         this.remove();
         this.dead = true;
-        this.onDeath();
+        this.triggerEvent("onDeath");
     }
     remove() {
         this.game.objects.remove(this);
@@ -118,15 +170,18 @@ export default class Entity extends Controllable {
         return this.dead;
     }
     onDeath() {
-
+        //console.log("Default onDeath event");
     }
     onCollision(col) {
-
+        //console.log("Default onCollision event");
     }
     onAdd() {
-
+        //console.log("Default onAdd event");
     }
+    
 }
 Entity.Bodies = Bodies;
+Entity.Svg = Svg;
 Entity.Body = Body;
 Entity.Vector = Vector;
+Entity.Vertices = Vertices;

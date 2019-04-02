@@ -2,6 +2,7 @@ import Victor from "victor";
 
 import ObjectManager from "./ObjectManager.js";
 import Player from "./Entity/Player";
+import Enemy from "./Entity/Enemy";
 import Wall from "./Entity/Wall.js";
 import { Matter, Events,Composite, Engine, Vector } from 'matter-js';
 
@@ -25,39 +26,49 @@ export default class Game {
 		this.renderer = new Renderer(this);
 		this.inputReciever = new InputReciever(this);
 
-        this.test();
     }
 
     test() {
-        //You
-        this.objects.push(new Player({
-            game: this,
-            position: new Victor(100, 100),
-            velocity: new Victor(0, 0),
-            shapeName: "You",
-        }));
-
-
-        //Enemy test
-        this.objects.push(new Player({
-            game: this,
-            position: new Victor(600, 200),
-            velocity: new Victor(0, 0),
-            shapeName: "Enemy",
-            color: "red"
-        }));
-
-
-        //Ground
+        var height = this.gameCanvas.getCanvas().height;
         var width = this.gameCanvas.getCanvas().width;
-		var height = this.gameCanvas.getCanvas().height;
-		
-		var wallWidth = 10;
+        //You
+        var sprite = new Player({
+            game: this,
+            position: Entity.Vector.create(100, height/2),
+            velocity: Entity.Vector.create(0, 0),
+            shapeName: "You",
+        });
+        this.objects.push(sprite);
+
+
+        //Enemy respawn test
+        var t = this;
+        var respawn = function() {
+            var e = new Enemy({
+                game: t,
+                position: Entity.Vector.create(sprite.position.x + 1000, Math.random() * height),
+                moveForce: Entity.Vector.create(0, 0),
+                shapeName: "Enemy",
+                color: "red",
+            });
+            e.on("onDeath",respawn);
+            t.objects.push(e);
+        }
+        respawn();
+
+        var wallWidth = 100;
 		//Top
         this.objects.push(new Wall({
             game: this,
-            position: Vector.create(width/2,wallWidth/2),
-            width: width,
+            position: Vector.create(width*100/2,wallWidth/2),
+            width: width*100,
+            height:wallWidth
+        }));
+        //Bottom
+		this.objects.push(new Wall({
+            game: this,
+            position: Vector.create(width*100/2,height-wallWidth/2),
+            width: width*100,
             height:wallWidth
 		}));
 		//Left
@@ -67,20 +78,7 @@ export default class Game {
             width: wallWidth,
             height:height
         }));
-		//Bottom
-		this.objects.push(new Wall({
-            game: this,
-            position: Vector.create(width/2,height-wallWidth/2),
-            width: width,
-            height:wallWidth
-		}));
-		//Right
-		this.objects.push(new Wall({
-            game: this,
-            position: Vector.create(width,height/2),
-            width: wallWidth,
-            height:height
-        }));
+		
 
         //Development
         window.game = this;
@@ -100,6 +98,9 @@ export default class Game {
 
     start() {
         if (this.isRunning()) return;
+
+        this.test();
+
 
         this.running = true;
         this.then = Date.now();
@@ -128,8 +129,8 @@ export default class Game {
             let a = p.bodyA;
             let b = p.bodyB;
 
-            a.entity.onCollision(b.entity);
-            b.entity.onCollision(a.entity);
+            a.entity.triggerEvent("onCollision",b.entity);
+            b.entity.triggerEvent("onCollision",a.entity);
         })
         
     }

@@ -1,3 +1,5 @@
+const webpack = require('webpack')
+
 module.exports = {
     entry: './src/index.js',
     devtool: 'source-map',
@@ -21,5 +23,6 @@ module.exports = {
 			use:['style-loader','css-loader']
 	}
 	  ]
-	},
+    },
+    plugins: [new webpack.ProvidePlugin({ 'window.decomp': 'poly-decomp' })]
   };
