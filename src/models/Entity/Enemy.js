@@ -19,7 +19,7 @@ export default class Enemy extends Entity {
             class: "PlayerObject",
             color: "black",
             body: Entity.Bodies.rectangle(0,0,20,20,{angularSpeed: 10,frictionAir: 0}),
-            maxLifetime: 3000,
+            maxLifetime: 5000,
 		}
 		super(Object.assign(playerType, props));
     }

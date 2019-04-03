@@ -11,6 +11,7 @@ import Entity from "./Entity/Entity.js";
 import InputReciever from "./InputReciever.js";
 
 import Renderer from "./Renderer.js";
+import Level from "./Level.js";
 
 
 export default class Game {
@@ -85,7 +86,16 @@ export default class Game {
         window.sprite = this.objects[0];
 
 		window.sprite.setResponsive(true);
-		this.renderer.lookAt(window.sprite);
+        this.renderer.lookAt(window.sprite);
+        
+
+        var level = new Level(this);
+
+        this.level = level;
+
+        level.start();
+        
+        window.level = level;
     }
 
     isRunning() { return this.running; }
@@ -94,6 +104,11 @@ export default class Game {
         this.objects.all(entity => {
             entity.update(event);
         });
+
+        if(this.level)
+        {
+            this.level.update();
+        }
     }
 
     start() {

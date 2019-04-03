@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --mode development",
-    "deploy": "webpack --config webpack.config.js"
+    "deploy": "webpack --config webpack.config.js",
+    "parse": "node ./Parser/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -29,6 +30,7 @@
   "dependencies": {
     "collisions": "^2.0.13",
     "matter-js": "^0.14.2",
+    "midi-parser-js": "^3.1.7",
     "poly-decomp": "^0.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

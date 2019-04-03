@@ -28,6 +28,7 @@ export default class Entity extends Controllable {
         this.health = this.maxHealth;
         this.creationDate = Date.now();
         this._eventListeners = {}
+        this.body.entity = this;
     }
 
     triggerEvent(listener,...params)
@@ -47,6 +48,7 @@ export default class Entity extends Controllable {
             listeners = this._eventListeners[listener] = [];
         listeners.push(callback);
     }
+
     get static() {
         return this.isStatic;
     }
@@ -77,14 +79,14 @@ export default class Entity extends Controllable {
     }
     update(event) {
         this.body.entity = this;
+        this.lifetime += 16.6666667;
         //One day fix this..
-        var now = Date.now();
-
         if (this.maxLifetime != undefined && this.getLifetime() >= this.maxLifetime)
             this.expire();
 
     }
     getLifetime() {
+        return this.lifetime;
         return Date.now()-this.creationDate;
     }
     setResponsive(respond) {
