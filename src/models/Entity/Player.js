@@ -13,7 +13,7 @@ const ControllerMapping = {
 }
 
 export default class Player extends Entity {
-	constructor(props) {
+	constructor(game,props) {
 		var playerType = {
 			shapeName: "Player 1",
 			class: "PlayerObject",
@@ -21,9 +21,9 @@ export default class Player extends Entity {
             body: Entity.Bodies.rectangle(0,0,50,56),
             moveForce: Vector.create(0, 0),
             forwardSpeed: 5,
-            fireTimeout: 1000,
+            fireTimeout: 500,
 		}
-        super(Object.assign(playerType, props));
+        super(game,Object.assign(playerType, props));
         this.moveForce = Vector.create(this.forwardSpeed,0);
 	}
 	onKeyDown(evt) {
@@ -124,13 +124,11 @@ export default class Player extends Entity {
         vel.y *= this.muzzleVelocity;
         vel.y = 0;
 
-		var p = new Projectile({
-            game: this.game,
+		var p = new Projectile(this.game,{
 			position: pos,
 			velocity: vel
 		});
         this.game.objects.push(p);
         this.lastFire = this.game.getSimTime();
-        console.log("Last Fire:",this.lastFire);
 	}
 }

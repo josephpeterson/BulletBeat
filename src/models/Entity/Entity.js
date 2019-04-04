@@ -3,10 +3,10 @@ import Controllable from "./Controllable.js";
 import { Matter, Engine, Render, World, Bodies, Bounds,Vector,Body, Svg, Vertices } from 'matter-js';
 
 export default class Entity extends Controllable {
-    constructor(props) {
-
+    constructor(game,props) {
         //Defaults
         var classType = {
+            game: game,
             class: "Entity",
             body: Bodies.rectangle(0, 0, 20, 20,{}),
             position: Vector.create(0, 0),
@@ -19,16 +19,15 @@ export default class Entity extends Controllable {
         }
         //Merge properties with default values
         props = Object.assign(classType, props);
-        super(props);
+        super(game,props);
         for (var i in props)
             this[i] = props[i];
 
         //Initialize properties
         this.lifetime = 0;
         this.health = this.maxHealth;
-        this.creationDate = 0;
+        this.creationDate = game.getSimTime();
         this._eventListeners = {}
-        this.body.entity = this;
     }
 
     triggerEvent(listener,...params)
@@ -73,17 +72,31 @@ export default class Entity extends Controllable {
     set velocity(vec) {
         Body.setVelocity(this.body,vec);
     }
+
+    set body(body)
+    {
+        var world = this.game.engine.world;
+        if(world.bodies.indexOf(this.body) != -1)
+        {
+            World.remove(world,this.body);
+            World.add(world,body);
+        }
+        this._body = body;
+        body.entity = this;
+    }
+    get body()
+    {
+        return this._body;
+    }
     addVelocity(x,y)
     {
         Body.applyForce(this.body,this.position,Vector.create(x,y));
     }
     update(event) {
-        this.body.entity = this;
         this.lifetime = this.game.getSimTime() - this.creationDate;
         //One day fix this..
         if (this.maxLifetime != undefined && this.game.getSimTime() >= this.creationDate + this.maxLifetime)
         {
-            console.log(this.dead,this.lifetime);
             this.expire();
         }
 
@@ -182,7 +195,7 @@ export default class Entity extends Controllable {
     }
     onAdd() {
         //console.log("Default onAdd event");
-        this.creationDate = this.game.getSimTime();
+        //this.creationDate = this.game.getSimTime();
     }
     
 }

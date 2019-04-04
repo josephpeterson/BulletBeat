@@ -1,7 +1,7 @@
 import Entity from "./Entity";
 
 export default class Renderable extends Entity {
-    constructor(props) {
+    constructor(game,props) {
 
         //Defaults
         var classType = {
@@ -10,13 +10,13 @@ export default class Renderable extends Entity {
             body: Entity.Bodies.circle(0,0,2),
             color: "orange",
             border: 1,
-            maxLifetime: 500,
+            maxLifetime: 800,
             collidable: false,
             opacity: 1
         }
         //Merge properties with default values
         props = Object.assign(classType, props);
-        super(props);
+        super(game,props);
     }
     update(event) {
         super.update(event);

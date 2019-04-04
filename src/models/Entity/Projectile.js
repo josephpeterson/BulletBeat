@@ -2,7 +2,7 @@ import Entity from "./Entity.js";
 import Emitter from "./Emitter.js";
 
 export default class Projectile extends Entity {
-    constructor(props) {
+    constructor(game,props) {
         var projectileType = {
             shapeName: "Player 1",
             body: Entity.Bodies.rectangle(0, 0, 30, 10,{frictionAir: 0,mass: 500}),
@@ -11,7 +11,7 @@ export default class Projectile extends Entity {
             directDamage: 10,
             collidingMasks: 0x010
         }
-        super(Object.assign(projectileType, props));
+        super(game,Object.assign(projectileType, props));
 
         var body = this.body;
         var init = Entity.Vector.create(0,0);
@@ -19,7 +19,7 @@ export default class Projectile extends Entity {
         Entity.Body.setAngle(body,theta);
     }
     onAdd() {
-        var trailEmitter = new Emitter({
+        var trailEmitter = new Emitter(this.game,{
             position: this.position,
         });
         trailEmitter.attachToObject(this);

@@ -17,6 +17,7 @@ export class Camera
 		var ctx = this.renderer.ctx;
 		var trans = this.getTranslation();
 
+		ctx.save();
 		ctx.translate(canvas.width/2, canvas.height/2);
         ctx.scale(this.zoom, this.zoom);
 		ctx.translate(-canvas.width/2, -canvas.height/2);
@@ -51,7 +52,8 @@ export default class Renderer
 		this.clear();
         this.background();
 		this.camera.apply();
-        this.render();
+		this.render();
+		this.renderHUD();
 	}
 
 	clear() {
@@ -75,6 +77,30 @@ export default class Renderer
 		});
 
 		this.renderInput();
+	}
+	renderHUD() {
+		var font = {
+			size: 12,
+			lineSpacing: 5,
+			family: "Calibri",
+			color: "black"
+		}
+		var lines = [
+			"Time: " + Math.round(this.game.getSimTime()),
+			"Objects: " + this.game.objects.length,
+			"World Bodies: " + this.game.engine.world.bodies.length,
+		];
+		//stuff
+		var ctx = this.ctx;
+		ctx.restore();
+		ctx.save();
+			ctx.font = font.size + "pt " + font.family;
+			ctx.fillStyle = font.color;
+			ctx.translate(10,20);
+			lines.forEach((l,i) => {
+				ctx.fillText(l,0,(font.size+font.lineSpacing) * i);
+			});
+		ctx.restore();
 	}
 	
 	renderInput() {

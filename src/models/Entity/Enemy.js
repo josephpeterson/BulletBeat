@@ -13,15 +13,16 @@ const ControllerMapping = {
 }
 
 export default class Enemy extends Entity {
-	constructor(props) {
+	constructor(game,props) {
 		var playerType = {
 			shapeName: "Enemy",
             class: "PlayerObject",
             color: "black",
             body: Entity.Bodies.rectangle(0,0,20,20,{angularSpeed: 10,frictionAir: 0}),
             maxLifetime: 5000,
+            moveForce: Entity.Vector.create(0,0)
 		}
-		super(Object.assign(playerType, props));
+		super(game,Object.assign(playerType, props));
     }
     onAdd()
     {

@@ -1,5 +1,5 @@
 export default class Controllable {
-    constructor(props) {
+    constructor(game,props) {
 
     }
     onMouseMove(evt)

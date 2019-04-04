@@ -2,14 +2,14 @@ import Entity from "./Entity";
 import Renderable from "./Renderable";
 
 export default class Emitter extends Entity {
-	constructor(props) {
-		super(Object.assign({
+	constructor(game,props) {
+		super(game,Object.assign({
 			class: "Emitter",
 			collidable: false,
 			static: true,
 
-			emitSpeed: 25,
-			maxParticles: 20,
+			emitSpeed: 100,
+			maxParticles: 50,
 			particles: [],
 			particleClass: Renderable
 		}, props));
@@ -46,11 +46,11 @@ export default class Emitter extends Entity {
 		var x = Math.cos(theta);
 		var y = Math.sin(theta);
 		var vel = Entity.Vector.create(x,y);
-		vel = Entity.Vector.mult(vel,0.3);
-		var p = new this.particleClass({
+		vel = Entity.Vector.mult(vel,0.7);
+		var p = new this.particleClass(this.game,{
 			emitter: this,
 			position: Entity.Vector.create(pos.x,pos.y),
-			velocity: vel
+			velocity: Entity.Vector.add(vel,this.velocity)
 		});
 		this.particles.push(p);
 		this.game.objects.push(p);
