@@ -27,7 +27,7 @@ export default class Renderable extends Entity {
 		Entity.Body.update(this.body,16,1,1);
     }
     render() {
-        var ctx = this.game.gameCanvas.getContext();
+        var ctx = this.game.getContext();
         ctx.save();
             ctx.globalAlpha = this.opacity;
             super.render();

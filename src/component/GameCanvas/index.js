@@ -12,9 +12,14 @@ export default class GameCanvas extends React.Component {
   constructor(props)
   {
     super(props);
+    this.state = {
+        screen: <></>
+    }
   }
   render() {
+    var screen = this.state.screen;
     return <div>
+        {screen}
         <div id="game" ref="game"></div>
         <img id="rocket" src="./rocket.png"/>
         <img id="fighter" src="./fighter.png"/>
@@ -23,31 +28,21 @@ export default class GameCanvas extends React.Component {
   }
   componentDidMount()
   {
-    //Matter-js: Create engine
-    this.engine = Engine.create();
-
-    this.engine.world.gravity.y = 0;
-
-    //Matter-js: Create renderer
-    this.renderer = Render.create({
-        element: this.refs.game,
-        engine: this.engine
-    });
-
-    this.createNewGame();
+    setTimeout(() => this.createNewGame(),0);
   }
-  getCanvas()
+  setScreen(scrn)
   {
-    return this.refs.game.children[0];
+      this.setState({
+          screen: scrn
+      });
   }
-  getContext()
+  getGameContainer()
   {
-    return this.getCanvas().getContext('2d');
+    return this.refs.game;
   }
   createNewGame()
   {
     var game = new Game(this);
-
     game.start();
   }
 }

@@ -38,11 +38,10 @@ export default class Renderer
 {
 	constructor(game)
 	{
-		var gameCanvas = game.gameCanvas;
 		this.game = game;
-		this.engine = gameCanvas.engine;
-		this.ctx = gameCanvas.getContext();
-		this.canvas = gameCanvas.getCanvas();
+		this.engine = game.engine;
+		this.ctx = game.getContext();
+		this.canvas = game.canvas;
 
 		this.camera = new Camera({
 			renderer: this

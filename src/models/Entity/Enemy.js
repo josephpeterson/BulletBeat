@@ -37,7 +37,7 @@ export default class Enemy extends Entity {
 		//this.fire(reciever.getWorldPosition(evt));
     }
     render() {
-        var ctx = this.game.gameCanvas.getContext();
+        var ctx = this.game.getContext();
         ctx.save();
             ctx.translate(this.position.x,this.position.y);
             ctx.rotate(Math.cos(this.getLifetime()/3000) * Math.PI * 4);

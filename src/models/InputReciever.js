@@ -24,7 +24,7 @@ export default class InputReciever {
     constructor(game) {
         this.listeners = new Array();
         this.game = game;
-        this.canvas = game.gameCanvas.getCanvas();
+        this.canvas = game.canvas;
 
         window.addEventListener("mousemove", this.mouseMove.bind(this));
         window.addEventListener("click", this.mouseClick.bind(this));

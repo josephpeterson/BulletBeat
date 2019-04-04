@@ -4,7 +4,7 @@ export default class ObjectManager extends Array {
     constructor(game) {
         super();
         this.game = game;
-        this.world = game.gameCanvas.engine.world;
+        this.world = game.engine.world;
     }
     test() {
         console.log("test me");

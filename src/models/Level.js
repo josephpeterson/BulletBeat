@@ -38,7 +38,7 @@ export default class Level
             continue;
             var e = new Enemy({
                 game: this.game,
-                position: Entity.Vector.create(sprite.position.x + 1000, Math.random() * this.game.gameCanvas.getCanvas().height),
+                position: Entity.Vector.create(sprite.position.x + 1000, Math.random() * this.game.canvas.height),
                 moveForce: Entity.Vector.create(0, 0),
                 shapeName: "Enemy",
                 color: "red",

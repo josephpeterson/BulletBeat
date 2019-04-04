@@ -27,7 +27,7 @@ export default class Projectile extends Entity {
     }
     render() {
         //super.render();
-        var ctx = this.game.gameCanvas.getContext();
+        var ctx = this.game.getContext();
 
         ctx.save();
             ctx.translate(this.position.x,this.position.y);

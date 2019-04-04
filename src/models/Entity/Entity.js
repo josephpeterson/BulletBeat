@@ -102,7 +102,7 @@ export default class Entity extends Controllable {
     }
     render() {
         var game = this.game;
-        var ctx = game.gameCanvas.getContext();
+        var ctx = game.getContext();
 
         //Default render matter-js bounds
         ctx.save();
@@ -123,7 +123,7 @@ export default class Entity extends Controllable {
         ctx.restore();
     }
     renderShapeName() {
-        var ctx = this.game.gameCanvas.getContext();
+        var ctx = this.game.getContext();
         ctx.save();
             var w = this.body.bounds.max.x-this.body.bounds.min.x;
             var x = (this.body.bounds.min.x + w/2);
@@ -135,7 +135,7 @@ export default class Entity extends Controllable {
         ctx.restore();
     }
     renderHealthBar() {
-        var ctx = this.game.gameCanvas.getContext();
+        var ctx = this.game.getContext();
         ctx.save();
             var w = this.body.bounds.max.x-this.body.bounds.min.x;
             var x = (this.body.bounds.min.x + w/2);

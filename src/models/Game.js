@@ -1,10 +1,10 @@
-import Victor from "victor";
+import React from "react";
 
 import ObjectManager from "./ObjectManager.js";
 import Player from "./Entity/Player";
 import Enemy from "./Entity/Enemy";
 import Wall from "./Entity/Wall.js";
-import { Matter, Events,Composite, Engine, Vector } from 'matter-js';
+import { Matter, Events, Composite, Engine, Vector, Render } from 'matter-js';
 
 import Emitter from "./Entity/Emitter.js";
 import Entity from "./Entity/Entity.js";
@@ -16,26 +16,36 @@ import Level from "./Level.js";
 
 export default class Game {
     constructor(gameCanvas) {
-        
+        //Matter-js: Create engine
+        var engine = this.engine = Engine.create();
+        this.engine.world.gravity.y = 0;
+
+        //Matter-js: Create renderer
+        this.renderer = Render.create({
+            element: gameCanvas.getGameContainer(),
+            engine: this.engine
+        });
+        this.gameCanvas = gameCanvas;
+        this.canvas = this.renderer.element.children[0];
+
         //Matter-js bind engine events
-        Events.on(gameCanvas.engine, "beforeUpdate",this.update.bind(this));
-        Events.on(gameCanvas.engine, "collisionStart",(event) => this.collisionStart(event));
+        Events.on(engine, "beforeUpdate", this.update.bind(this));
+        Events.on(engine, "collisionStart", (event) => this.collisionStart(event));
 
         this.running = false;
-        this.gameCanvas = gameCanvas;
-		this.objects = new ObjectManager(this);
-		this.renderer = new Renderer(this);
-		this.inputReciever = new InputReciever(this);
+        this.objects = new ObjectManager(this);
+        this.renderer = new Renderer(this);
+        this.inputReciever = new InputReciever(this);
 
     }
 
     test() {
-        var height = this.gameCanvas.getCanvas().height;
-        var width = this.gameCanvas.getCanvas().width;
+        var height = this.canvas.height;
+        var width = this.canvas.width;
         //You
         var sprite = new Player({
             game: this,
-            position: Entity.Vector.create(100, height/2),
+            position: Entity.Vector.create(100, height / 2),
             velocity: Entity.Vector.create(0, 0),
             shapeName: "You",
         });
@@ -44,7 +54,7 @@ export default class Game {
 
         //Enemy respawn test
         var t = this;
-        var respawn = function() {
+        var respawn = function () {
             var e = new Enemy({
                 game: t,
                 position: Entity.Vector.create(sprite.position.x + 1000, Math.random() * height),
@@ -52,49 +62,49 @@ export default class Game {
                 shapeName: "Enemy",
                 color: "red",
             });
-            e.on("onDeath",respawn);
+            e.on("onDeath", respawn);
             t.objects.push(e);
         }
         respawn();
 
         var wallWidth = 100;
-		//Top
+        //Top
         this.objects.push(new Wall({
             game: this,
-            position: Vector.create(width*100/2,wallWidth/2),
-            width: width*100,
-            height:wallWidth
+            position: Vector.create(width * 100 / 2, wallWidth / 2),
+            width: width * 100,
+            height: wallWidth
         }));
         //Bottom
-		this.objects.push(new Wall({
+        this.objects.push(new Wall({
             game: this,
-            position: Vector.create(width*100/2,height-wallWidth/2),
-            width: width*100,
-            height:wallWidth
-		}));
-		//Left
-		this.objects.push(new Wall({
-            game: this,
-            position: Vector.create(-wallWidth/2,height/2),
-            width: wallWidth,
-            height:height
+            position: Vector.create(width * 100 / 2, height - wallWidth / 2),
+            width: width * 100,
+            height: wallWidth
         }));
-		
+        //Left
+        this.objects.push(new Wall({
+            game: this,
+            position: Vector.create(-wallWidth / 2, height / 2),
+            width: wallWidth,
+            height: height
+        }));
+
 
         //Development
         window.game = this;
         window.sprite = this.objects[0];
 
-		window.sprite.setResponsive(true);
+        window.sprite.setResponsive(true);
         this.renderer.lookAt(window.sprite);
-        
+
 
         var level = new Level(this);
 
         this.level = level;
 
         level.start();
-        
+
         window.level = level;
     }
 
@@ -105,16 +115,26 @@ export default class Game {
             entity.update(event);
         });
 
-        if(this.level)
-        {
+        if (this.level) {
             this.level.update();
         }
     }
 
     getSimTime() {
-        return this.gameCanvas.engine.timing.timestamp;
+        return this.engine.timing.timestamp;
     }
-
+    getContext() {
+        return this.canvas.getContext('2d');
+    }
+    setScreen(reactComp)
+    {
+        this.gameCanvas.setScreen(reactComp);
+    }
+    testScreen() {
+        this.setScreen(<div>
+            potty mouth
+        </div>);
+    }
     start() {
         if (this.isRunning()) return;
 
@@ -125,8 +145,7 @@ export default class Game {
         this.then = Date.now();
         this.tick();
 
-        var g = this.gameCanvas;
-        Engine.run(g.engine);
+        Engine.run(this.engine);
     }
     stop() { this.running = false; }
 
@@ -148,9 +167,9 @@ export default class Game {
             let a = p.bodyA;
             let b = p.bodyB;
 
-            a.entity.triggerEvent("onCollision",b.entity);
-            b.entity.triggerEvent("onCollision",a.entity);
+            a.entity.triggerEvent("onCollision", b.entity);
+            b.entity.triggerEvent("onCollision", a.entity);
         })
-        
+
     }
 }

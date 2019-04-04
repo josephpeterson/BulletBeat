@@ -59,7 +59,7 @@ export default class Player extends Entity {
 	update(event) {
         Body.setAngle(this.body,0);
 
-        var height = this.game.gameCanvas.getCanvas().height;
+        var height = this.game.canvas.height;
         var minY = height/4;
         var maxY = minY*4;
 
@@ -76,7 +76,7 @@ export default class Player extends Entity {
 	}
 	render() {
         //super.render();
-        var ctx = this.game.gameCanvas.getContext();
+        var ctx = this.game.getContext();
 
         ctx.save();
             ctx.translate(this.position.x,this.position.y);
