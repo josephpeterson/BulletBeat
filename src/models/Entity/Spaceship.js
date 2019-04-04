@@ -20,7 +20,7 @@ export class Spaceship extends Controllable {
 			class: "SpaceshipObject",
             muzzleVelocity: 15,                             //How fast is this enemy shooting
             forwardVector: Vector.create(5,0),
-            body: Entity.Bodies.rectangle(0,0,50,56),
+            body: Entity.Bodies.rectangle(0,0,50,45),
             fireTimeout: 500,                               //How often can we shoot
 		}
         super(game,Object.assign(playerType, props));
