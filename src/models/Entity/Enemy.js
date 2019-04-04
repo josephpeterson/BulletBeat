@@ -3,7 +3,6 @@ import { KeyboardMap } from "../InputReciever.js";
 import Victor from 'victor';
 import Projectile from './Projectile.js';
 import { Vector, Body } from "matter-js";
-import Player from './Player';
 
 const ControllerMapping = {
 	move_left: "",

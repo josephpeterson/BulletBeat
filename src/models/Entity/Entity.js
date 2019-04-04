@@ -1,8 +1,6 @@
-import Victor from "victor";
-import Controllable from "./Controllable.js";
 import { Matter, Engine, Render, World, Bodies, Bounds,Vector,Body, Svg, Vertices } from 'matter-js';
 
-export default class Entity extends Controllable {
+export default class Entity {
     constructor(game,props) {
         //Defaults
         var classType = {
@@ -19,7 +17,6 @@ export default class Entity extends Controllable {
         }
         //Merge properties with default values
         props = Object.assign(classType, props);
-        super(game,props);
         for (var i in props)
             this[i] = props[i];
 
@@ -104,14 +101,6 @@ export default class Entity extends Controllable {
     getLifetime() {
         return this.lifetime;
         return Date.now()-this.creationDate;
-    }
-    setResponsive(respond) {
-        var reciever = this.game.inputReciever;
-        if (!respond) {
-            if (reciever.listeners.indexOf(this) != -1) reciever.splice(reciever.indexOf(this), 1);
-            return;
-        }
-        reciever.listeners.push(this);
     }
     render() {
         var game = this.game;

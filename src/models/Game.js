@@ -1,7 +1,6 @@
 import React from "react";
 
 import ObjectManager from "./ObjectManager.js";
-import Player from "./Entity/Player";
 import Enemy from "./Entity/Enemy";
 import Wall from "./Entity/Wall.js";
 import { Matter, Events, Composite, Engine, Vector, Render, Runner } from 'matter-js';
@@ -12,6 +11,7 @@ import InputReciever from "./InputReciever.js";
 
 import Renderer from "./Renderer.js";
 import Level from "./Level.js";
+import {Spaceship,SpaceshipControllable} from "./Entity/Spaceship.js";
 
 
 export default class Game {
@@ -43,7 +43,7 @@ export default class Game {
         var height = this.canvas.height;
         var width = this.canvas.width;
         //You
-        var sprite = new Player(this,{
+        var sprite = new SpaceshipControllable(this,{
             game: this,
             position: Entity.Vector.create(100, height / 2),
             velocity: Entity.Vector.create(0, 0),
@@ -55,11 +55,12 @@ export default class Game {
         //Enemy respawn test
         var t = this;
         var respawn = function () {
-            var e = new Enemy(t,{
+            var e = new Spaceship(t,{
                 position: Entity.Vector.create(sprite.position.x + 1000, Math.random() * height),
                 moveForce: Entity.Vector.create(0, 0),
                 shapeName: "Enemy",
                 color: "red",
+                maxLifetime: 2000
             });
             e.on("onDeath", respawn);
             t.objects.push(e);
@@ -88,7 +89,7 @@ export default class Game {
         }));
 
 
-        this.objects.push(new Player(this,{
+        this.objects.push(new Spaceship(this,{
             game: this,
             position: Entity.Vector.create(300, height / 2),
             velocity: Entity.Vector.create(0, 0),
@@ -99,7 +100,6 @@ export default class Game {
         window.game = this;
         window.sprite = this.objects.getIndex(0);
 
-        window.sprite.setResponsive(true);
         this.renderer.lookAt(window.sprite);
 
 

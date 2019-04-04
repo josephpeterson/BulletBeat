@@ -3,6 +3,7 @@ import { KeyboardMap } from "../InputReciever.js";
 import Victor from 'victor';
 import Projectile from './Projectile.js';
 import { Vector, Body } from "matter-js";
+import Controllable from "./Controllable.js";
 
 const ControllerMapping = {
 	move_left: "",
@@ -12,66 +13,23 @@ const ControllerMapping = {
     fire: KeyboardMap.KEY_SPACE,
 }
 
-export default class Player extends Entity {
+export class Spaceship extends Controllable {
 	constructor(game,props) {
 		var playerType = {
-			shapeName: "Player 1",
-			class: "PlayerObject",
-            muzzleVelocity: 15,
+			shapeName: "Apollo",
+			class: "SpaceshipObject",
+            muzzleVelocity: 15,                             //How fast is this enemy shooting
+            moveForce: Vector.create(5,0),
             body: Entity.Bodies.rectangle(0,0,50,56),
-            moveForce: Vector.create(0, 0),
-            forwardSpeed: 5,
-            fireTimeout: 500,
+            fireTimeout: 500,                               //How often can we shoot
 		}
         super(game,Object.assign(playerType, props));
-        this.moveForce = Vector.create(this.forwardSpeed,0);
-	}
-	onKeyDown(evt) {
-		this.checkControls();
-	}
-	onKeyUp(evt) {
-		this.checkControls();
-	}
-	checkControls() {
-		var speed = 2;
-		var input = this.game.inputReciever;
-
-		var controls = {
-			move_left: input.getKey(ControllerMapping.move_left),
-			move_right: input.getKey(ControllerMapping.move_right),
-			move_up: input.getKey(ControllerMapping.move_up),
-			move_down: input.getKey(ControllerMapping.move_down),
-		}
-		var x = 0;
-		var y = 0;
-		if (controls.move_left)
-			x += -speed;
-		if (controls.move_right)
-			x += speed;
-			if (controls.move_up)
-			y += -speed;
-		if (controls.move_down)
-            y += speed;
-        
-        x = this.forwardSpeed;
-		this.moveForce = Vector.create(x,y);
 	}
 	update(event) {
-        Body.setAngle(this.body,0);
+        //Body.setAngle(this.body,0);
 
-        var height = this.game.canvas.height;
-        var minY = height/4;
-        var maxY = minY*4;
-
-        var atTop = this.position.y <= minY && this.moveForce.y < 0;
-        var atBottom = this.position.y >= maxY && this.moveForce.y > 0;
-        if(atTop || atBottom)
-            Body.setVelocity(this.body,Entity.Vector.create(this.forwardSpeed,0));
-        else
-            Body.setVelocity(this.body, this.moveForce);
-            
-        if(this.game.inputReciever.getKey(ControllerMapping.fire) && this.canFire())
-            this.fire(this.game.inputReciever.getWorldPosition());
+        var vec = Vector.rotate(this.moveForce,this.body.angle);
+        Body.setVelocity(this.body,vec);       
         super.update(event);
 	}
 	render() {
@@ -96,11 +54,52 @@ export default class Player extends Entity {
             ctx.rotate(Math.cos(this.getLifetime()/500) * Math.PI/180 * 2);
             ctx.drawImage(document.getElementById("fighter"),-w/2,y,w,h);
         ctx.restore();
+	}
+}
+export class SpaceshipControllable extends Spaceship {
+    constructor(game,props)
+    {
+        super(game,props);
+        this.setResponsive(true);
+    }
+    onKeyDown(evt) {
+		//this.checkControls();
+	}
+	onKeyUp(evt) {
+		//this.checkControls();
+    }
+    update() {
+        this.checkControls();
+        super.update();
+    }
+    render() {
+        super.render();
         this.renderShapeName();
         this.renderHealthBar();
-	}
+    }
+	checkControls() {
+		var speed = 2;
+		var input = this.game.inputReciever;
 
-	onMouseClick(evt) {
+		var controls = {
+			move_up: input.getKey(ControllerMapping.move_up),
+            move_down: input.getKey(ControllerMapping.move_down),
+            firing: input.getKey(ControllerMapping.fire)
+        }
+        
+        //Check if we're trying to move
+		var y = 0;
+		if (controls.move_up)
+			y += -speed;
+		if (controls.move_down)
+            y += speed;
+        this.moveForce = Vector.create(this.moveForce.x,y);
+        
+        //Are we firing
+        if(controls.firing && this.canFire())
+            this.fire(input.getWorldPosition());5
+	}
+    onMouseClick(evt) {
 		var reciever = this.game.inputReciever;
     }
     canFire() {
