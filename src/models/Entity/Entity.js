@@ -7,7 +7,7 @@ export default class Entity extends Controllable {
         //Defaults
         var classType = {
             game: game,
-            class: Entity,
+            class: "Entity",
             body: Bodies.rectangle(0, 0, 20, 20,{}),
             position: Vector.create(0, 0),
             color: "lightblue",
@@ -118,23 +118,22 @@ export default class Entity extends Controllable {
         var ctx = game.getContext();
 
         //Default render matter-js bounds
-        //ctx.save();
+        ctx.save();
             ctx.fillStyle = this.color;
             ctx.strokeStyle = "black";
             var body = this.body;
             var vertices = body.vertices;
-            //ctx.closePath();
+            ctx.beginPath();
             ctx.moveTo(vertices[0].x, vertices[0].y);
             for (var j = 1; j < vertices.length; j += 1) {
                 ctx.lineTo(vertices[j].x, vertices[j].y);
             }
             ctx.lineTo(vertices[0].x, vertices[0].y);
-            ctx.closePath();
-            //ctx.fill();
+            ctx.fill();
 
-            //if(this.border > 0)
-            //    ctx.stroke();
-        //ctx.restore();
+            if(this.border > 0)
+                ctx.stroke();
+        ctx.restore();
     }
     renderShapeName() {
         var ctx = this.game.getContext();
