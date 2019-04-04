@@ -19,7 +19,6 @@ export default class Enemy extends Entity {
             color: "black",
             body: Entity.Bodies.rectangle(0,0,20,20,{angularSpeed: 10,frictionAir: 0}),
             maxLifetime: 5000,
-            moveForce: Entity.Vector.create(0,0)
 		}
 		super(game,Object.assign(playerType, props));
     }
@@ -28,7 +27,6 @@ export default class Enemy extends Entity {
         //Entity.Body.setAngularVelocity(this.body,100);
     }
 	update(event) {
-		Body.setVelocity(this.body, this.moveForce);
 		super.update(event);
 	}
 

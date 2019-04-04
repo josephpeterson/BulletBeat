@@ -11,7 +11,7 @@ export default class Entity {
             color: "lightblue",
             maxLifetime: undefined,
             maxHealth: 100,
-            collidingMasks: 0x0001,
+            //collidingMasks: 0x0001,
             collidable: true,
             border: 1,
         }
@@ -85,11 +85,21 @@ export default class Entity {
     {
         return this._body;
     }
+    set collidingMasks(val) {
+        Body.set(this.body,"collisionFilter",{
+            mask: val
+        });
+    }
+    get collidingMasks() {
+        return this.body.collisionFilter.mask;
+    }
     addVelocity(x,y)
     {
         Body.applyForce(this.body,this.position,Vector.create(x,y));
     }
     update(event) {
+        if(this.forwardVector)
+            Body.setVelocity(this.body,this.forwardVector);
         this.lifetime = this.game.getSimTime() - this.creationDate;
         //One day fix this..
         if (this.maxLifetime != undefined && this.game.getSimTime() >= this.creationDate + this.maxLifetime)

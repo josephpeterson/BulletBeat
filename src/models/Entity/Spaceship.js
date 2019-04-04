@@ -19,17 +19,14 @@ export class Spaceship extends Controllable {
 			shapeName: "Apollo",
 			class: "SpaceshipObject",
             muzzleVelocity: 15,                             //How fast is this enemy shooting
-            moveForce: Vector.create(5,0),
+            forwardVector: Vector.create(5,0),
             body: Entity.Bodies.rectangle(0,0,50,56),
             fireTimeout: 500,                               //How often can we shoot
 		}
         super(game,Object.assign(playerType, props));
 	}
 	update(event) {
-        //Body.setAngle(this.body,0);
-
-        var vec = Vector.rotate(this.moveForce,this.body.angle);
-        Body.setVelocity(this.body,vec);       
+        Body.setAngle(this.body,0);
         super.update(event);
 	}
 	render() {
@@ -93,11 +90,11 @@ export class SpaceshipControllable extends Spaceship {
 			y += -speed;
 		if (controls.move_down)
             y += speed;
-        this.moveForce = Vector.create(this.moveForce.x,y);
+        this.forwardVector = Vector.create(this.forwardVector.x,y);
         
         //Are we firing
         if(controls.firing && this.canFire())
-            this.fire(input.getWorldPosition());5
+            this.fire();
 	}
     onMouseClick(evt) {
 		var reciever = this.game.inputReciever;
@@ -107,9 +104,9 @@ export class SpaceshipControllable extends Spaceship {
             return true;
         return false;
     }
-	fire(des) {
-		var y = des.y - this.position.y;
-		var x = des.x - this.position.x;
+	fire() {
+		var y = this.position.y;
+		var x = this.position.x;
 
 		var vel = Vector.create(x, y);
 		vel = Vector.normalise(vel);

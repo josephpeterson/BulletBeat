@@ -1,5 +1,5 @@
 import Entity from "./Entity";
-import Renderable from "./Renderable";
+import Particle from "./Particle";
 
 export default class Emitter extends Entity {
 	constructor(game,props) {
@@ -8,10 +8,10 @@ export default class Emitter extends Entity {
 			collidable: false,
 			static: true,
 
-			emitSpeed: 100,
-			maxParticles: 50,
+			emitSpeed: 10,
+			maxParticles: 100,
 			particles: [],
-			particleClass: Renderable
+			particleClass: Particle
 		}, props));
 	}
 	render() {
@@ -30,27 +30,32 @@ export default class Emitter extends Entity {
 		var particles = this.particles;
 		if(particles.length < this.maxParticles)
 		{
-			if(particles.length == 0 || Date.now() - particles[particles.length-1].creationDate > this.emitSpeed)
+			if(particles.length == 0 || this.game.getSimTime() - particles[particles.length-1].creationDate > this.emitSpeed)
 				this.emitParticle();
 		}
 	}
 
 	attachToObject(obj)
 	{
-		this.attachedTo = obj;
+        this.attachedTo = obj;
+        this.position = obj.position;
+        this.velocity = obj.velocity;
 	}
 	emitParticle() {
 		var pos = this.position;
 
-		var theta = Math.random() * Math.PI * 2;
+        var maxVariance = Math.PI/180*6; 
+        var theta = Math.random() * maxVariance;
+        theta -= maxVariance/2;
 		var x = Math.cos(theta);
-		var y = Math.sin(theta);
-		var vel = Entity.Vector.create(x,y);
-		vel = Entity.Vector.mult(vel,0.7);
+        var y = Math.sin(theta);
+        
+        var vel = Entity.Vector.mult(this.velocity,0.5);
+        vel = Entity.Vector.rotate(vel,theta);
 		var p = new this.particleClass(this.game,{
 			emitter: this,
 			position: Entity.Vector.create(pos.x,pos.y),
-			velocity: Entity.Vector.add(vel,this.velocity)
+			velocity: vel
 		});
 		this.particles.push(p);
 		this.game.objects.push(p);

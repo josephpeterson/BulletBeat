@@ -9,7 +9,6 @@ export default class Projectile extends Entity {
             class: "Projectile",
             maxLifetime: 1000,
             directDamage: 10,
-            collidingMasks: 0x010
         }
         super(game,Object.assign(projectileType, props));
 
@@ -46,8 +45,9 @@ export default class Projectile extends Entity {
     }
     onCollision(col) {
         this.expire();
-
-        if(col.collidingMasks == this.collidingMasks)
-            col.damage(this.directDamage);
+        
+        console.log("BOOM");
+        //if(col.collidingMasks == this.collidingMasks)
+        //    col.damage(this.directDamage);
     }
 }

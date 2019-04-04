@@ -57,7 +57,6 @@ export default class Game {
         var respawn = function () {
             var e = new Spaceship(t,{
                 position: Entity.Vector.create(sprite.position.x + 1000, Math.random() * height),
-                moveForce: Entity.Vector.create(0, 0),
                 shapeName: "Enemy",
                 color: "red",
                 maxLifetime: 2000

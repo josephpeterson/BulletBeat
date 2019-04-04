@@ -1,16 +1,16 @@
 import Entity from "./Entity";
 
-export default class Renderable extends Entity {
+export default class Particle extends Entity {
     constructor(game,props) {
 
         //Defaults
         var classType = {
-            class: "Renderable",
+            class: "Particle",
             position: Entity.Vector.create(0, 0),
             body: Entity.Bodies.circle(0,0,2),
-            color: "orange",
-            border: 1,
-            maxLifetime: 800,
+            color: "darkorange",
+            border: 0,
+            maxLifetime: 1500,
             collidable: false,
             opacity: 1
         }
@@ -23,7 +23,7 @@ export default class Renderable extends Entity {
 
         var life = (this.maxLifetime-this.getLifetime())/this.maxLifetime;
         this.opacity = life;
-        Entity.Body.scale(this.body,0.99,0.99);
+        Entity.Body.scale(this.body,1.005,1.005);
 		Entity.Body.update(this.body,16,1,1);
     }
     render() {
