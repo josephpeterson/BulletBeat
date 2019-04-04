@@ -69,14 +69,36 @@ export default class Renderer
 	}
 	
 	render() {
+		var ctx = this.ctx;
 		var objects = this.game.objects;
 
-        //Objects
-        objects.all(entity => {
+		//Objects
+		var renderClass = undefined; //Check if this changes, once it does, start stroking
+		var rendered = 0;
+		objects.all(entity => {
+			if(entity.class != renderClass)
+			{
+				if(renderClass)
+				{
+					this.ctx.fill();
+					this.ctx.stroke();
+				}
+				//console.log("now rendering ",entity.class,"Rendered " + rendered + " " + renderClass + " last iteration");
+				rendered = 0;
+				renderClass = entity.class;
+			}
+			rendered++;
+			ctx.save();
 			entity.render();
+			ctx.restore();
 		});
+		this.ctx.fill();
+		this.ctx.stroke();
+		//console.log("Rendered " + rendered + " " + renderClass + " last iteration");
 
 		this.renderInput();
+
+		//this.game.stop();
 	}
 	renderHUD() {
 		var font = {
