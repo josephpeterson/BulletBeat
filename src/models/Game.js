@@ -111,6 +111,10 @@ export default class Game {
         }
     }
 
+    getSimTime() {
+        return this.gameCanvas.engine.timing.timestamp;
+    }
+
     start() {
         if (this.isRunning()) return;
 

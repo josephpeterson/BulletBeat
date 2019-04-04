@@ -39,7 +39,6 @@ export default class Projectile extends Entity {
     update(event) {
         super.update(event);
         //Rotate on velocity
-        Entity.Body.setInertia(this.body,500);
     }
 
     expire() {

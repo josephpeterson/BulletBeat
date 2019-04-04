@@ -21,7 +21,7 @@ export default class Player extends Entity {
             body: Entity.Bodies.rectangle(0,0,50,56),
             moveForce: Vector.create(0, 0),
             forwardSpeed: 5,
-            fireTimeout: 200,
+            fireTimeout: 1000,
 		}
         super(Object.assign(playerType, props));
         this.moveForce = Vector.create(this.forwardSpeed,0);
@@ -104,7 +104,7 @@ export default class Player extends Entity {
 		var reciever = this.game.inputReciever;
     }
     canFire() {
-        if(!this.lastFire || Date.now() - this.lastFire >= this.fireTimeout)
+        if(!this.lastFire || this.game.getSimTime() - this.lastFire >= this.fireTimeout)
             return true;
         return false;
     }
@@ -123,11 +123,14 @@ export default class Player extends Entity {
         vel.x *= this.muzzleVelocity;
         vel.y *= this.muzzleVelocity;
         vel.y = 0;
+
 		var p = new Projectile({
+            game: this.game,
 			position: pos,
 			velocity: vel
 		});
         this.game.objects.push(p);
-        this.lastFire = p.creationDate;
+        this.lastFire = this.game.getSimTime();
+        console.log("Last Fire:",this.lastFire);
 	}
 }

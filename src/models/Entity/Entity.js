@@ -26,7 +26,7 @@ export default class Entity extends Controllable {
         //Initialize properties
         this.lifetime = 0;
         this.health = this.maxHealth;
-        this.creationDate = Date.now();
+        this.creationDate = 0;
         this._eventListeners = {}
         this.body.entity = this;
     }
@@ -79,10 +79,13 @@ export default class Entity extends Controllable {
     }
     update(event) {
         this.body.entity = this;
-        this.lifetime += 16.6666667;
+        this.lifetime = this.game.getSimTime() - this.creationDate;
         //One day fix this..
-        if (this.maxLifetime != undefined && this.getLifetime() >= this.maxLifetime)
+        if (this.maxLifetime != undefined && this.game.getSimTime() >= this.creationDate + this.maxLifetime)
+        {
+            console.log(this.dead,this.lifetime);
             this.expire();
+        }
 
     }
     getLifetime() {
@@ -179,6 +182,7 @@ export default class Entity extends Controllable {
     }
     onAdd() {
         //console.log("Default onAdd event");
+        this.creationDate = this.game.getSimTime();
     }
     
 }
