@@ -1,0 +1,22 @@
+.TitleScreen
+{
+    background-color:#9FA2B2;
+}
+.TitleScreen h1
+{
+    margin:0px;
+    padding:20px;
+    text-align: center;
+}
+.TitleScreen button {
+    display: block;
+    background: none;
+    border:none;
+    font-size:25pt;
+    font-family: "Calibri";
+    outline:none;
+}
+.TitleScreen button:hover
+{
+    color:orange;
+}

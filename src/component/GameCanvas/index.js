@@ -19,7 +19,9 @@ export default class GameCanvas extends React.Component {
   render() {
     var screen = this.state.screen;
     return <div>
-        {screen}
+        <div id="CurrentScreen" ref="screen">
+            {screen}
+        </div>
         <div id="game" ref="game"></div>
         <img id="rocket" src="./rocket.png"/>
         <img id="fighter" src="./fighter.png"/>
@@ -43,6 +45,6 @@ export default class GameCanvas extends React.Component {
   createNewGame()
   {
     var game = new Game(this);
-    game.start();
+    game.toTitleScreen();
   }
 }

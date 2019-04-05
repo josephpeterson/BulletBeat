@@ -1,7 +1,9 @@
 import { Matter, Engine, Render, World, Bodies, Bounds,Vector,Body, Svg, Vertices } from 'matter-js';
+import Eventable from "./Eventable";
 
-export default class Entity {
+export default class Entity extends Eventable {
     constructor(game,props) {
+        super(game,props);
         //Defaults
         var classType = {
             game: game,
@@ -27,23 +29,7 @@ export default class Entity {
         this._eventListeners = {}
     }
 
-    triggerEvent(listener,...params)
-    {
-        var listeners = this._eventListeners[listener];
-        if(this[listener])
-            this[listener].apply(this,params);
-        if(listeners)
-        this._eventListeners[listener].forEach(trigger => {
-            trigger.apply(this,params);
-        });
-    }
-    on(listener,callback)
-    {
-        var listeners = this._eventListeners[listener];
-        if(!listeners)
-            listeners = this._eventListeners[listener] = [];
-        listeners.push(callback);
-    }
+    
 
     get static() {
         return this.isStatic;

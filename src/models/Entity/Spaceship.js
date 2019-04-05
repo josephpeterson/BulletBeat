@@ -1,9 +1,7 @@
 import Entity from "./Entity.js";
 import { KeyboardMap } from "../InputReciever.js";
-import Victor from 'victor';
 import Projectile from './Projectile.js';
 import { Vector, Body } from "matter-js";
-import Controllable from "./Controllable.js";
 
 const ControllerMapping = {
 	move_left: "",
@@ -13,7 +11,7 @@ const ControllerMapping = {
     fire: KeyboardMap.KEY_SPACE,
 }
 
-export class Spaceship extends Controllable {
+export class Spaceship extends Entity {
 	constructor(game,props) {
 		var playerType = {
 			shapeName: "Apollo",
@@ -57,7 +55,7 @@ export class SpaceshipControllable extends Spaceship {
     constructor(game,props)
     {
         super(game,props);
-        this.setResponsive(true);
+        game.inputReciever.setResponsive(this,true);
     }
     onKeyDown(evt) {
 		//this.checkControls();

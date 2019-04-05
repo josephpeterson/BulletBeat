@@ -33,8 +33,8 @@ export default class InputReciever {
         window.addEventListener("keyup", this.keyUp.bind(this));
     }
     emit(eventCallback, event) {
-        this.listeners.forEach((listener) => {
-            listener[eventCallback](event);
+        this.listeners.forEach((eventable) => {
+            eventable.triggerEvent(eventCallback,event);
         });
     }
     update(event) {
@@ -80,5 +80,15 @@ export default class InputReciever {
         if (v != true)
             v = false;
         return v;
+    }
+    setKey(code,val) {
+        this["K" + code] = val;
+    }
+    setResponsive(obj,responding) {
+        if (!responding) {
+            if(reciever.listeners.indexOf(obj) != -1) reciever.splice(reciever.indexOf(obj), 1);
+                return;
+        }
+        this.listeners.push(obj);
     }
 }

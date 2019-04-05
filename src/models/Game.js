@@ -3,19 +3,25 @@ import React from "react";
 import ObjectManager from "./ObjectManager.js";
 import Enemy from "./Entity/Enemy";
 import Wall from "./Entity/Wall.js";
-import { Matter, Events, Composite, Engine, Vector, Render, Runner } from 'matter-js';
+import { Matter, Events, Composite, Engine, Vector, Render, Runner, World } from 'matter-js';
 
-import Emitter from "./Entity/Emitter.js";
 import Entity from "./Entity/Entity.js";
-import InputReciever from "./InputReciever.js";
+import InputReciever, { KeyboardMap } from "./InputReciever.js";
 
 import Renderer from "./Renderer.js";
 import Level from "./Level.js";
 import {Spaceship,SpaceshipControllable} from "./Entity/Spaceship.js";
+import TitleScreen from "../component/TitleScreen";
+import PauseScreen from "../component/PauseScreen";
+import Eventable from "./Entity/Eventable";
 
+const ControllerMapping = {
+	pauseScreen: KeyboardMap.KEY_ESC
+}
 
-export default class Game {
+export default class Game extends Eventable {
     constructor(gameCanvas) {
+        super();
         //Matter-js: Create engine
         var engine = this.engine = Engine.create();
         this.engine.world.gravity.y = 0;
@@ -26,7 +32,7 @@ export default class Game {
             engine: this.engine
         });
         this.gameCanvas = gameCanvas;
-        this.canvas = this.renderer.element.children[0];
+        this.canvas = this.renderer.element.getElementsByTagName("canvas")[0]
 
         //Matter-js bind engine events
         Events.on(engine, "beforeUpdate", this.update.bind(this));
@@ -36,9 +42,22 @@ export default class Game {
         this.objects = new ObjectManager(this);
         this.renderer = new Renderer(this);
         this.inputReciever = new InputReciever(this);
+        this.runner = Runner.run(this.engine);
 
+        //Allow this class to respond to input
+        this.inputReciever.setResponsive(this,true);
     }
 
+    onKeyUp(event) {
+        if(event.keyCode == ControllerMapping.pauseScreen)
+        {
+            if(this.isRunning())
+                this.toPauseScreen();
+            else
+                this.toPlayScreen();
+            return;
+        }
+    }
     test() {
         var height = this.canvas.height;
         var width = this.canvas.width;
@@ -92,7 +111,8 @@ export default class Game {
             game: this,
             position: Entity.Vector.create(300, height / 2),
             velocity: Entity.Vector.create(0, 0),
-            shapeName: "You",
+            forwardVector: Entity.Vector.create(5.1,0),
+            shapeName: "Enemy",
         }));
 
         //Development
@@ -114,6 +134,10 @@ export default class Game {
     isRunning() { return this.running; }
 
     update(event) {
+        if(!this.isRunning())
+            return;
+        this.renderer.run();
+        
         this.objects.all(entity => {
             entity.update(event);
         });
@@ -133,34 +157,30 @@ export default class Game {
     {
         this.gameCanvas.setScreen(reactComp);
     }
-    testScreen() {
-        this.setScreen(<div>
-            potty mouth
-        </div>);
-    }
     start() {
         if (this.isRunning()) return;
-
-        this.test();
-
-
         this.running = true;
-        this.then = Date.now();
-        this.tick();
-
-        Engine.run(this.engine);
+        this.runner.enabled = true;
     }
-    stop() { this.running = false; Runner.stop(this.engine);}
+    stop() { this.running = false; this.runner.enabled = false;}
 
-    tick() {
-        if (!this.isRunning()) return;
-
-        var now = Date.now();
-        var delta = now - this.then;
-
-        requestAnimationFrame(this.tick.bind(this));
-        this.renderer.run();
-        this.then = now;
+    reset() {
+        //todo
+        this.objects.clear();
+        World.clear(this.engine.world);
+        Engine.clear(this.engine);
+        this.running = false;
+        
+    }
+    toTitleScreen() {
+        this.setScreen(<TitleScreen game={this}/>);
+    }
+    toPlayScreen() {
+        this.start();
+        this.setScreen();
+    }
+    toPauseScreen() {
+        this.setScreen(<PauseScreen game={this}/>);
     }
 
     collisionStart(event) {

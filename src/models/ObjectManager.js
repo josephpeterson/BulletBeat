@@ -25,6 +25,9 @@ export default class ObjectManager {
         entity.triggerEvent("onAdd",this,this.world);
         
     }
+    clear() {
+        this._objects = [];
+    }
     sort() {
         //Sort these objects to improve rendering speed
         this._objects.sort((a,b) => {
