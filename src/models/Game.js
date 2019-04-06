@@ -1,7 +1,7 @@
 import React from "react";
 
 import ObjectManager from "./ObjectManager.js";
-import Enemy from "./Entity/Enemy";
+import Asteroid from "./Entity/Asteroid";
 import Wall from "./Entity/Wall.js";
 import { Matter, Events, Composite, Engine, Vector, Render, Runner, World } from 'matter-js';
 
@@ -72,13 +72,15 @@ export default class Game extends Eventable {
 
 
         //Enemy respawn test
-        var t = this;
+		var t = this;
+		
         var respawn = function () {
+			Math.random();Math.random();Math.random();Math.random();
             var e = new Spaceship(t,{
-                position: Entity.Vector.create(sprite.position.x + 1000, Math.random() * height),
+                position: Entity.Vector.create(sprite.position.x + 1000,100 + Math.random() * (height-200)),
                 shapeName: "Enemy",
                 color: "red",
-                maxLifetime: 2000
+                maxLifetime: 1500
             });
             e.on("onDeath", respawn);
             t.objects.push(e);
@@ -114,6 +116,7 @@ export default class Game extends Eventable {
             forwardVector: Entity.Vector.create(5.1,0),
             shapeName: "Enemy",
         }));
+      
 
         //Development
         window.game = this;

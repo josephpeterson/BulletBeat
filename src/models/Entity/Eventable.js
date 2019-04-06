@@ -27,18 +27,18 @@ export default class Eventable {
     }
     onMouseClick(evt)
     {
-        console.log("Controllable Default: Mouse has been clicked!");
+        //console.log("Controllable Default: Mouse has been clicked!");
     }
     onMouseRightClick(evt)
     {
-        console.log("Controllable Default: Mouse has been right clicked!");
+        //console.log("Controllable Default: Mouse has been right clicked!");
     }
     onKeyDown(evt)
     {
-        console.log("Controllable Default: Keyboard key down");
+        //console.log("Controllable Default: Keyboard key down");
     }
     onKeyUp(evt)
     {
-        console.log("Controllable Default: Keyboard key up");
+        //console.log("Controllable Default: Keyboard key up");
     }
 }

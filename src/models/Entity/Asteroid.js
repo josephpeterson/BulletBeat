@@ -11,7 +11,7 @@ const ControllerMapping = {
 	move_down: KeyboardMap.keyCode("S"),
 }
 
-export default class Enemy extends Entity {
+export default class Asteroid extends Entity {
 	constructor(game,props) {
 		var playerType = {
 			shapeName: "Enemy",

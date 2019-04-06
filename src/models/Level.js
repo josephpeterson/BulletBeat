@@ -1,32 +1,35 @@
 import AfricaLevel from '../songs/africa.json';
 import Entity from './Entity/Entity';
-import Enemy from './Entity/Enemy';
+import Asteroid from './Entity/Asteroid';
 
 export default class Level
 {
     constructor(game)
     {
         this.game = game;
-        this.levelData = AfricaLevel;
+		this.levelData = AfricaLevel;
+		this.creationDate = game.getSimTime();
     }
     start() {
         this.lifetime = 0;
         this.spawned = 0;
     }
     update() {
-        this.lifetime += 16.66667;
+        this.lifetime = this.game.getSimTime()-this.creationDate;
 
         var track = this.levelData.track[0].event;
 
         var data = track.sort((a,b) => {
             return a.deltaTime < b.deltaTime;
-        });
+		});
+		
+		//console.log(data);
 
         var objs = [];
         for(var i=0;i<data.length;i++)
         {
             var obj = data[i];
-            if(obj.deltaTime < this.lifetime)
+            if(obj.deltaTime*1000 < this.lifetime)
                 objs.push(obj);
         }
 
@@ -35,15 +38,13 @@ export default class Level
         {
             var obj = objs[i];
             this.spawned++;
-            continue;
-            var e = new Enemy({
-                game: this.game,
+            var e = new Asteroid(game,{
                 position: Entity.Vector.create(sprite.position.x + 1000, Math.random() * this.game.canvas.height),
                 shapeName: "Enemy",
                 color: "red",
             });
             this.game.objects.push(e);
-        }
+		}
     }
 
 }

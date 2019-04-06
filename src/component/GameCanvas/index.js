@@ -45,6 +45,7 @@ export default class GameCanvas extends React.Component {
   createNewGame()
   {
     var game = new Game(this);
-    game.toTitleScreen();
+    game.test();
+    game.toPauseScreen();
   }
 }

@@ -46,7 +46,6 @@ export default class Projectile extends Entity {
     onCollision(col) {
         this.expire();
         
-        console.log("BOOM");
         //if(col.collidingMasks == this.collidingMasks)
         //    col.damage(this.directDamage);
     }
