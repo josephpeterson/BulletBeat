@@ -14,6 +14,7 @@ import {Spaceship,SpaceshipControllable} from "./Entity/Spaceship.js";
 import TitleScreen from "../component/TitleScreen";
 import PauseScreen from "../component/PauseScreen";
 import Eventable from "./Entity/Eventable";
+import PlayScreen from "../component/PlayScreen/index.js";
 
 const ControllerMapping = {
 	pauseScreen: KeyboardMap.KEY_ESC
@@ -159,7 +160,10 @@ export default class Game extends Eventable {
     setScreen(reactComp)
     {
         this.gameCanvas.setScreen(reactComp);
-    }
+	}
+	getScreen() {
+		return this.gameCanvas.getScreen();
+	}
     start() {
         if (this.isRunning()) return;
         this.running = true;
@@ -176,14 +180,15 @@ export default class Game extends Eventable {
         
     }
     toTitleScreen() {
-        this.setScreen(<TitleScreen game={this}/>);
+        this.setScreen(TitleScreen);
+
     }
     toPlayScreen() {
         this.start();
-        this.setScreen();
+        this.setScreen(PlayScreen);
     }
     toPauseScreen() {
-        this.setScreen(<PauseScreen game={this}/>);
+        this.setScreen(PauseScreen);
     }
 
     collisionStart(event) {

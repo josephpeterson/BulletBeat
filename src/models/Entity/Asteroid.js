@@ -18,7 +18,8 @@ export default class Asteroid extends Entity {
             class: "PlayerObject",
             color: "black",
             body: Entity.Bodies.rectangle(0,0,20,20,{angularSpeed: 10,frictionAir: 0}),
-            maxLifetime: 5000,
+			maxLifetime: 5000,
+			directDamage: 13,
 		}
 		super(game,Object.assign(playerType, props));
     }
@@ -68,6 +69,7 @@ export default class Asteroid extends Entity {
     }
     onCollision(col)
     {
-        this.die();
+		this.die();
+		col.damage(this.directDamage);
     }
 }

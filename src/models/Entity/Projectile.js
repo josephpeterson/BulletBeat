@@ -7,7 +7,7 @@ export default class Projectile extends Entity {
             shapeName: "Player 1",
             body: Entity.Bodies.rectangle(0, 0, 30, 10,{frictionAir: 0,mass: 500}),
             class: "Projectile",
-            maxLifetime: 1000,
+            maxLifetime: 1200,
             directDamage: 10,
         }
         super(game,Object.assign(projectileType, props));

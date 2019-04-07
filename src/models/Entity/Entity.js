@@ -153,8 +153,9 @@ export default class Entity extends Eventable {
     }
 
     damage(amt) {
-        this.health -= amt;
-        if (this.health <= 0)
+		this.health -= amt;
+		this.triggerEvent("onDamage");
+        if (this.health <= 0 && !this.invincible)
             this.die();
     }
     die() {
@@ -164,7 +165,7 @@ export default class Entity extends Eventable {
     expire() {
         this.remove();
         this.dead = true;
-        this.triggerEvent("onDeath");
+		this.triggerEvent("onDeath");
     }
     remove() {
         this.game.objects.remove(this);

@@ -9,7 +9,8 @@ export default class Wall extends Entity {
       color: "#A8A8A8",
       height:50,
       width:200,
-      border: 0
+	  border: 0,
+	  invincible: true
     }
     super(game,Object.assign(playerType,props));
     this.body = Bodies.rectangle(this.position.x,this.position.y,this.width,this.height);

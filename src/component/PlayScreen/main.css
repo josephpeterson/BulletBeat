@@ -1,0 +1,13 @@
+.PlayScreen
+{
+
+}
+.PlayScreen .hudContainer {
+	margin:8px;
+}
+.PlayScreen progress
+{
+	background-color:green;
+	display: block;
+	width:100%;
+}

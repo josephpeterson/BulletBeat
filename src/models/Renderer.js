@@ -54,7 +54,7 @@ export default class Renderer
 		this.camera.apply();
 		this.render();
 		//this.renderBounds();
-		this.renderHUD();
+		//this.renderHUD();
 	}
 
 	clear() {

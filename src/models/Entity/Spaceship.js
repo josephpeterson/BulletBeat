@@ -54,14 +54,11 @@ export class Spaceship extends Entity {
 export class SpaceshipControllable extends Spaceship {
     constructor(game,props)
     {
-        super(game,props);
+		var sprite = {
+			score: 0
+		}
+        super(game,Object.assign(sprite, props));
         game.inputReciever.setResponsive(this,true);
-    }
-    onKeyDown(evt) {
-		//this.checkControls();
-	}
-	onKeyUp(evt) {
-		//this.checkControls();
     }
     update() {
         this.checkControls();
@@ -70,7 +67,7 @@ export class SpaceshipControllable extends Spaceship {
     render() {
         super.render();
         this.renderShapeName();
-        this.renderHealthBar();
+        //this.renderHealthBar();
     }
 	checkControls() {
 		var speed = 2;
@@ -124,5 +121,9 @@ export class SpaceshipControllable extends Spaceship {
 		});
         this.game.objects.push(p);
         this.lastFire = this.game.getSimTime();
+	}
+	damage(amt) {
+		super.damage(amt);
+		this.game.getScreen().forceUpdate();
 	}
 }
