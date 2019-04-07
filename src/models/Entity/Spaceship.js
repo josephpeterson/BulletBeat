@@ -1,7 +1,7 @@
 import Entity from "./Entity.js";
 import { KeyboardMap } from "../InputReciever.js";
-import Projectile from './Projectile.js';
 import { Vector, Body } from "matter-js";
+import RocketProjectile from "./RocketProjectile/RocketProjectile.js";
 
 const ControllerMapping = {
 	move_left: "",
@@ -115,7 +115,7 @@ export class SpaceshipControllable extends Spaceship {
         vel.y *= this.muzzleVelocity;
         vel.y = 0;
 
-		var p = new Projectile(this.game,{
+		var p = new RocketProjectile(this.game,{
 			position: pos,
 			velocity: vel
 		});

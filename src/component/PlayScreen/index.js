@@ -25,8 +25,9 @@ export default class PlayScreen extends React.Component {
 		}}>
 			<div className="hudContainer">
 				<span>Score: {score}</span>
-				<span>Healh: {health}/{maxHealth}</span>
-				<progress value={health} max={maxHealth}></progress>
+				<div className="healthBar">
+					<span style={{width: (Math.floor(health/maxHealth*100)) + "%"}}></span>
+				</div>
 			</div>
 		</div>;
 	}

@@ -1,15 +1,6 @@
-import Entity from "./Entity.js";
-import { KeyboardMap } from "../InputReciever.js";
-import Victor from 'victor';
-import Projectile from './Projectile.js';
-import { Vector, Body } from "matter-js";
-
-const ControllerMapping = {
-	move_left: "",
-	move_right: "",
-	move_up: KeyboardMap.keyCode("W"),
-	move_down: KeyboardMap.keyCode("S"),
-}
+import Entity from "../Entity.js";
+import { KeyboardMap } from "../../InputReciever.js";
+import AsteroidExplosionEmitter  from "./ExplosionEmitter";
 
 export default class Asteroid extends Entity {
 	constructor(game,props) {
@@ -26,7 +17,13 @@ export default class Asteroid extends Entity {
     onAdd()
     {
         //Entity.Body.setAngularVelocity(this.body,100);
-    }
+	}
+	onDeath() {
+		var explosionEmitter = new AsteroidExplosionEmitter(this.game,{
+            position: Entity.Vector.create(this.position.x,this.position.y),
+        });
+        this.game.objects.push(explosionEmitter);
+	}
 	update(event) {
 		super.update(event);
 	}
@@ -50,25 +47,10 @@ export default class Asteroid extends Entity {
             ctx.drawImage(document.getElementById("asteroid"),-w/2,-h/2,w,h);
         ctx.restore();
     }
-	fire(des) {
-		var y = des.y - this.position.y;
-		var x = des.x - this.position.x;
-
-		var vel = Vector.create(x, y);
-		vel = Vector.normalise(vel);
-
-        var pos = Vector.add(this.position,Vector.mult(vel,80));
-
-        vel.x *= this.muzzleVelocity;
-		vel.y *= this.muzzleVelocity;
-		var p = new Projectile({
-			position: pos,
-			velocity: vel
-		});
-		this.game.objects.push(p);
-    }
     onCollision(col)
     {
+		if(col.class == this.class)
+			return;
 		this.die();
 		col.damage(this.directDamage);
     }

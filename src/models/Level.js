@@ -1,6 +1,6 @@
 import AfricaLevel from '../songs/africa.json';
 import Entity from './Entity/Entity';
-import Asteroid from './Entity/Asteroid';
+import Asteroid from './Entity/Asteroid/Asteroid';
 
 export default class Level
 {
@@ -37,7 +37,7 @@ export default class Level
         for(var i=this.spawned;i<objs.length;i++)
         {
             var obj = objs[i];
-            this.spawned++;
+			this.spawned++;
             var e = new Asteroid(game,{
                 position: Entity.Vector.create(sprite.position.x + 1000, Math.random() * this.game.canvas.height),
                 shapeName: "Enemy",

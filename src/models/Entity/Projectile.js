@@ -4,11 +4,12 @@ import Emitter from "./Emitter.js";
 export default class Projectile extends Entity {
     constructor(game,props) {
         var projectileType = {
-            shapeName: "Player 1",
             body: Entity.Bodies.rectangle(0, 0, 30, 10,{frictionAir: 0,mass: 500}),
             class: "Projectile",
             maxLifetime: 1200,
-            directDamage: 10,
+			directDamage: 10,
+			trailEmitter: undefined,
+			explosionEmitter: undefined,
         }
         super(game,Object.assign(projectileType, props));
 
@@ -18,11 +19,15 @@ export default class Projectile extends Entity {
         Entity.Body.setAngle(body,theta);
     }
     onAdd() {
-        var trailEmitter = new Emitter(this.game,{
-            position: this.position,
-        });
-        trailEmitter.attachToObject(this);
-        this.game.objects.push(trailEmitter);
+		var trailEmitter = this.trailEmitter;
+		if(trailEmitter)
+		{
+			var trailEmitter = new trailEmitter(this.game,{
+				position: this.position,
+			});
+			trailEmitter.attachToObject(this);
+			this.game.objects.push(trailEmitter);
+		}
     }
     render() {
         //super.render();
@@ -34,19 +39,7 @@ export default class Projectile extends Entity {
             ctx.drawImage(document.getElementById("rocket"),-10,-2.6,20,5.3);
         ctx.restore();
     }
-
-    update(event) {
-        super.update(event);
-        //Rotate on velocity
-    }
-
-    expire() {
-        super.expire();
-    }
     onCollision(col) {
         this.expire();
-        
-        //if(col.collidingMasks == this.collidingMasks)
-        //    col.damage(this.directDamage);
     }
 }

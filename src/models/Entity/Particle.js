@@ -1,8 +1,6 @@
 import Entity from "./Entity";
-
 export default class Particle extends Entity {
     constructor(game,props) {
-
         //Defaults
         var classType = {
             class: "Particle",
@@ -18,21 +16,16 @@ export default class Particle extends Entity {
         props = Object.assign(classType, props);
         super(game,props);
     }
-    update(event) {
-        super.update(event);
-
-        var life = (this.maxLifetime-this.getLifetime())/this.maxLifetime;
-        this.opacity = life;
-        Entity.Body.scale(this.body,1.005,1.005);
-		Entity.Body.update(this.body,16,1,1);
-    }
     render() {
         var ctx = this.game.getContext();
         ctx.save();
             ctx.globalAlpha = this.opacity;
             super.render();
         ctx.restore();
-    }
+	}
+	update() {
+		super.update();
+	}
     onDeath() {
         var particles = this.emitter.particles;
         particles.splice(particles.indexOf(this),1);

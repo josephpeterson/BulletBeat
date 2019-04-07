@@ -1,7 +1,6 @@
 import React from "react";
 
 import ObjectManager from "./ObjectManager.js";
-import Asteroid from "./Entity/Asteroid";
 import Wall from "./Entity/Wall.js";
 import { Matter, Events, Composite, Engine, Vector, Render, Runner, World } from 'matter-js';
 
